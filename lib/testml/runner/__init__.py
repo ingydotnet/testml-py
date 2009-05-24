@@ -1,5 +1,5 @@
 
-#from testml.document import Document
+from testml.document import Document
 #from testml.parser import Parser
 
 import os
@@ -85,7 +85,7 @@ class Runner(object):
         for file in document.meta.data['Data']:
             parser = Parser(receiver=Builder(), start_token='data')
             if file == '_':
-                parser.stream(builder.inline_data)
+                parser.stream = builder.inline_data
             else:
                 parser.open(os.path.join(self.bag, file))
             parser.parse()
