@@ -7,6 +7,6 @@ def test():
     for test in (Runner(
         'tests/testml/basic.tml',
         Bridge,
-    ).next()):
+    ).run()):
          yield test
 
