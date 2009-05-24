@@ -1,0 +1,3 @@
+[submodule "tests/testml"]
+	path = tests/testml
+	url = git@github.com:ingydotnet/testml-tml.git

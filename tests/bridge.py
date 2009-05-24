@@ -1,0 +1,2 @@
+class Bridge(object):
+    pass
