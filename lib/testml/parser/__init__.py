@@ -1,5 +1,6 @@
 
 import re
+import yaml
 
 from grammar import Grammar
 
@@ -20,7 +21,8 @@ class Parser(object):
     def parse(self):
         self.match(self.start_token)
         if self.position < len(self.stream):
-            raise ParserException("Parse document failed for some reason")
+            print yaml.dump(self.receiver.document)
+            raise ParserException("Parse document failed at %s:\n%s\n" % (self.position, self.stream[self.position:]))
 
     def match(self, topic):
         _not = False
@@ -32,14 +34,11 @@ class Parser(object):
             pass
 
         state = None
-        try:
-            if re.match(r'\w+$', topic):
-                state = topic
-                self.stack.append(state)
-                topic = self.grammar[topic]
-                self.callback('try', state)
-        except TypeError:
-            pass
+        if isinstance(topic, basestring) and re.match(r'\w+$', topic):
+            state = topic
+            self.stack.append(state)
+            topic = self.grammar[topic]
+            self.callback('try', state)
 
         method = None
         times = '1'
@@ -108,8 +107,12 @@ class Parser(object):
         return True
 
     def get_regexp(self, pattern):
-        print 'patterna #########\n', pattern, "\n#############"
         pattern = pattern.lstrip('/').rstrip('/')
+
+        def replacer(match):
+            matched = match.group(1)
+            replacement= self.grammar[matched]
+            return replacement.lstrip('/').rstrip('/')
 
         match = re.search(r'\$(\w+)', pattern)
         while match:
@@ -119,9 +122,8 @@ class Parser(object):
             except KeyError:
                 raise ParserException('%s not in grammar' % matched)
             replacement = replacement.lstrip('/').rstrip('/')
-            pattern = re.sub(r'\$\w+', replacement, pattern, 1)
+            pattern = re.sub(r'\$(\w+)', replacer, pattern, 1)
             match = re.search(r'\$(\w+)', pattern)
-        print 'patternb #########\n', pattern, "\n#############"
         return re.compile(pattern)
 
     def callback(self, type, state):
