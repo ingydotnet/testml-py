@@ -1,6 +1,6 @@
 
-from testml.document import Document
-#from testml.parser import Parser
+from testml.document import Document, Builder
+from testml.parser import Parser
 
 import os
 
