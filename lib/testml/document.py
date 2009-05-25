@@ -72,7 +72,7 @@ class Builder(object):
     def got_document(self, arguments):
         data_files = self.document.meta.data['Data']
         if not data_files:
-            data_file.append('_')
+            data_files.append('_')
         
     def got_meta_testml_statement(self, arguments):
         version = arguments[0]
@@ -99,15 +99,12 @@ class Builder(object):
         self.current_statement = None
 
     def try_test_expression(self, arguments):
-        print 'tte ', self.current_expression
         self.current_expression.append(Expression())
 
     def got_test_expression(self, arguments):
-        print 'gte ', self.current_expression
         self.insert_expression_here[-1].append(self.current_expression.pop())
 
     def not_test_expression(self, arguments):
-        print 'nte ', self.current_expression
         self.current_expression.pop()
 
     def got_data_point(self, arguments):

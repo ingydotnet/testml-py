@@ -21,8 +21,8 @@ class Parser(object):
     def parse(self):
         self.match(self.start_token)
         if self.position < len(self.stream):
-            print yaml.dump(self.receiver.document)
             raise ParserException("Parse document failed at %s:\n%s\n" % (self.position, self.stream[self.position:]))
+        print yaml.dump(self.receiver.document)
 
     def match(self, topic):
         _not = False

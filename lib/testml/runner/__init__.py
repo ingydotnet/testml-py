@@ -39,7 +39,7 @@ class Runner(object):
                 left = self.evaluate_expression(statement.primary_expression[0], block)
                 if statement.assertion_expression:
                     right = self.evaluation_express(statement.assertion_expression[0], block)
-                    self.do_test('EQ', left, right, block.label)
+                    yield self.do_test('EQ', left, right, block.label)
 
         self.plan_end()
 
@@ -63,6 +63,12 @@ class Runner(object):
             blocks.append(block)
 
         return blocks
+
+    def plan_begin(self):
+        pass
+
+    def plan_end(self):
+        pass
 
     def evaluate_expression(self, expression, block):
         topic = Topic(document=self.doc, block=block, value=None)

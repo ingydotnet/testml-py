@@ -15,4 +15,4 @@ class Runner(SuperRunner):
     def do_test(self, operator, left, right, label=None):
         def test():
             assert left == right, label
-        yield test
+        return test
