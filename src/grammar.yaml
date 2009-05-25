@@ -150,7 +150,7 @@ assertion_call_start:
 
 assertion_name: /EQ/
 
-data_section: /(===(?:$SPACE|$EOL)$ANY+|\z)/
+data_section: /(===(?:$SPACE|$EOL)$ANY+|\Z)/
 
 data:
   =: data_block
