@@ -1,8 +1,6 @@
 import re
 from grammar import Grammar
 
-import yaml   #XXX
-
 class ParserException(Exception):
     pass
 
@@ -21,8 +19,6 @@ class Parser(object):
         self.match(self.start_token)
         if self.position < len(self.stream):
             raise ParserException("Parse document failed at %s:\n%s\n" % (self.position, self.stream[self.position:]))
-#         if self.start_token == 'data':
-#             print yaml.dump(self.receiver.document) #XXX
 
     def match(self, topic):
         if isinstance(topic, basestring) and topic[0] == '!':

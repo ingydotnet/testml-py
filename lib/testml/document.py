@@ -1,3 +1,4 @@
+
 class Document(object):
     def __init__(self):
         self.meta = Meta()
@@ -92,8 +93,6 @@ class Builder(object):
     def got_test_statement(self, arguments):
         statement = self.current_statement
         statement.points = sorted(list(set(statement.points)))
-        import yaml
-        print yaml.dump(statement)
         self.document.tests.statements.append(statement)
         self.current_statement = None
 

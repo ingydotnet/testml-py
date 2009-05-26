@@ -13,10 +13,6 @@ class Topic(object):
         self.block = block
         self.value = value
 
-# field 'document'
-# field 'block'
-# field 'value'
-    pass
 
 class Runner(object):
 
@@ -43,7 +39,7 @@ class Runner(object):
             for block in blocks:
                 left = self.evaluate_expression(statement.primary_expression[0], block)
                 if statement.assertion_expression:
-                    right = self.evaluation_express(statement.assertion_expression[0], block)
+                    right = self.evaluate_expression(statement.assertion_expression[0], block)
                     yield self.do_test('EQ', left, right, block.label)
 
         self.plan_end()

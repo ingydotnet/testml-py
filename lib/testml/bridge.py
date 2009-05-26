@@ -1,7 +1,5 @@
-# This is bogus ingy code...
+
 class Bridge(object):
-    def __init__(self):
-        pass
 
     def transform_classes(self):
         return [
@@ -11,5 +9,12 @@ class Bridge(object):
     def get_transform_function(self, name):
         classes = self.transform_classes()
         function = None
-        for klass in classes
-            import klass
+        function_name = 'testml_%s' % name
+        for klass in classes:
+            try:
+                module = __import__(klass, {}, {}, [function_name])
+                function = getattr(module, function_name)
+                break
+            except ImportError:
+                pass
+        return function
