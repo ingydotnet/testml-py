@@ -122,7 +122,7 @@ class Builder(object):
     def got_transform_name(self, arguments):
         self.transform_name = arguments[0]
 
-    def got_transform_class(self, arguments):
+    def got_transform_call(self, arguments):
         name = self.transform_name
         self.current_expression[-1].transforms.append(Transform(name=name, args=self.arguments))
 

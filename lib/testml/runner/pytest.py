@@ -13,6 +13,8 @@ class Runner(SuperRunner):
         print "=== %s ===" % self.doc.meta.data['Title']
 
     def do_test(self, operator, left, right, label=None):
+        print 'lv ', left.value, '#'
+        print 'rv ', right.value, '$'
         def test():
             assert left.value == right.value, label
         return test
