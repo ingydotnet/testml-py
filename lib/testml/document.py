@@ -1,4 +1,3 @@
-
 class Document(object):
     def __init__(self):
         self.meta = Meta()
@@ -9,13 +8,13 @@ class Document(object):
 class Meta(object):
     def __init__(self):
         self.data = {
-                'TestML': '',
-                'Data': [],
-                'Title': '',
-                'Plan': 0,
-                'TestMLBlockMarker': '===',
-                'TestMLPointMarker': '---',
-                }
+            'TestML': '',
+            'Data': [],
+            'Title': '',
+            'Plan': 0,
+            'TestMLBlockMarker': '===',
+            'TestMLPointMarker': '---',
+        }
 
 
 class Tests(object):
@@ -58,16 +57,17 @@ class Builder(object):
 
     def __init__(self):
         self.document = Document()
-        self.insert_expression_here = []
-        self.current_expression = []
-        self.blocks = []
-        self.arguments = []
 
         self.current_statement = None
+        self.insert_expression_here = []
+        self.current_expression = []
         self.inline_data = None
+
         self.current_block = None
+        self.blocks = []
         self.point_name = None
         self.transform_name = None
+        self.arguments = []
 
     def got_document(self, arguments):
         data_files = self.document.meta.data['Data']
@@ -91,7 +91,9 @@ class Builder(object):
 
     def got_test_statement(self, arguments):
         statement = self.current_statement
-        statement.points = sorted(list.set(statment.points))
+        statement.points = sorted(list(set(statement.points)))
+        import yaml
+        print yaml.dump(statement)
         self.document.tests.statements.append(statement)
         self.current_statement = None
 

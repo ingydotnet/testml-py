@@ -1,8 +1,7 @@
-
 import re
-import yaml
-
 from grammar import Grammar
+
+import yaml   #XXX
 
 class ParserException(Exception):
     pass
@@ -22,16 +21,15 @@ class Parser(object):
         self.match(self.start_token)
         if self.position < len(self.stream):
             raise ParserException("Parse document failed at %s:\n%s\n" % (self.position, self.stream[self.position:]))
-        print yaml.dump(self.receiver.document)
+#         if self.start_token == 'data':
+#             print yaml.dump(self.receiver.document) #XXX
 
     def match(self, topic):
-        _not = False
-        try:
-            if topic[0] == '!':
-                topic = topic[1:]
-                _not = True
-        except (IndexError, KeyError):
-            pass
+        if isinstance(topic, basestring) and topic[0] == '!':
+            _not = True
+            topic = topic.lstrip('!')
+        else:
+            _not = False
 
         state = None
         if isinstance(topic, basestring) and re.match(r'\w+$', topic):
@@ -44,6 +42,7 @@ class Parser(object):
         times = '1'
         if isinstance(topic, basestring) and topic.startswith('/'):
             method = 'match_regexp'
+            self.pstate = state #XXX-DEBUG
         elif isinstance(topic, list):
             method = 'match_all'
         elif isinstance(topic, dict):
@@ -99,7 +98,18 @@ class Parser(object):
     def match_regexp(self, pattern):
         regexp = self.get_regexp(pattern)
 
-        match = regexp.search(self.stream, self.position)
+        match = regexp.match(self.stream, self.position)
+
+
+#         # XXX-DEBUG
+#         if match: M='YES'
+#         else: M='NO'
+#         state = self.pstate or self.pat
+#         context = self.stream[self.position:]
+#         context = re.sub(r'\n', '\\n', context, 99)
+#         print [M, state, context]
+
+
         if not match:
             return False
         self.arguments = list(match.groups())
@@ -124,6 +134,7 @@ class Parser(object):
             replacement = replacement.lstrip('/').rstrip('/')
             pattern = re.sub(r'\$(\w+)', replacer, pattern, 1)
             match = re.search(r'\$(\w+)', pattern)
+        self.pat = pattern #XXX-DEBUG
         return re.compile(pattern)
 
     def callback(self, type, state):

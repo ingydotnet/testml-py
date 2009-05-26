@@ -8,6 +8,11 @@ class RunnerException(Exception):
     pass
 
 class Topic(object):
+    def __init__(self, document=None, block=None, value=None):
+        self.document = document
+        self.block = block
+        self.value = value
+
 # field 'document'
 # field 'block'
 # field 'value'
@@ -27,7 +32,7 @@ class Runner(object):
 
 
     def run(self):
-        # establish self.base the location of the data files
+        # TODO establish self.base the location of the data files
         self.setup()
         self.title()
         self.plan_begin()
@@ -47,17 +52,17 @@ class Runner(object):
         blocks = []
 
         for block in self.doc.data.blocks:
-            if block.points['SKIP']:
+            if block.points.has_key('SKIP'):
                 continue
-            if block.points['LAST']:
+            if block.points.has_key('LAST'):
                 break
             try:
-                for point in request_points:
+                for point in requested_points:
                     if not block.points[point]:
                         raise StopIteration
             except StopIteration:
                 continue
-            if block.points['ONLY']:
+            if block.points.has_key('ONLY'):
                 blocks = [block]
                 break
             blocks.append(block)
@@ -73,7 +78,7 @@ class Runner(object):
     def evaluate_expression(self, expression, block):
         topic = Topic(document=self.doc, block=block, value=None)
         
-        for transform in expresion.transforms:
+        for transform in expression.transforms:
             function = self.Bridge.get_transform_function(transform.name)
             topic.value = function(topic, transform.args)
         return topic
