@@ -11,8 +11,9 @@ class Topic(object):
     def __init__(self, document=None, block=None, value=None):
         self.document = document
         self.block = block
+        self.point = None
         self.value = value
-
+        self.error = None
 
 class Runner(object):
 
@@ -75,8 +76,15 @@ class Runner(object):
         topic = Topic(document=self.doc, block=block, value=None)
         
         for transform in expression.transforms:
+            if (topic.error and transform.name != 'Catch'):
+                continue
             function = self.Bridge.get_transform_function(transform.name)
-            topic.value = function(topic, transform.args)
+            try:
+                topic.value = function(topic, transform.args)
+            except(Exception, e):
+                topic.error(e)
+        if (topic.error):
+            raise(topic.error)
         return topic
 
     def parse(self):
@@ -94,7 +102,7 @@ class Runner(object):
             if file == '_':
                 parser.stream = builder.inline_data
             else:
-                parser.open(os.path.join(self.bag, file))
+                parser.open(os.path.join(self.base, file))
             parser.parse()
             document.data.blocks.extend(parser.receiver.blocks)
 
