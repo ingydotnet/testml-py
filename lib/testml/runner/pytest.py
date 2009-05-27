@@ -10,11 +10,17 @@ class Runner(SuperRunner):
         pass
 
     def title(self):
-        print "=== %s ===" % self.doc.meta.data['Title']
+        if self.doc.meta.data['Title']:
+            print "=== %s ===" % self.doc.meta.data['Title']
 
     def do_test(self, operator, left, right, label=None):
-        print 'lv ', left.value, '#'
-        print 'rv ', right.value, '$'
         def test():
-            assert left.value == right.value, label
+            try:
+                assert left.value == right.value, label
+            except AssertionError:
+                print "\nGot:  '%s'" % left.value
+                print "Want: '%s'" % right.value
+            finally:
+                assert left.value == right.value, label
+
         return test

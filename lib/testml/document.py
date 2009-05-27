@@ -111,7 +111,9 @@ class Builder(object):
     def got_data_point(self, arguments):
         name = arguments[0]
         self.current_statement.points.append(name)
-        self.current_expression[-1].transforms.append(Transform(name='Point', args=name))
+        self.current_expression[-1].transforms.append(
+            Transform(name='Point', args=[name])
+        )
 
     def try_transform_call(self, arguments):
         self.arguments = []

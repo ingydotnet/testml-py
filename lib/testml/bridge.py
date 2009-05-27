@@ -15,4 +15,6 @@ class Bridge(object):
                 break
             except (ImportError, AttributeError):
                 pass
+        if not function:
+            raise ImportError('unable to import function: %s' % function_name)
         return function

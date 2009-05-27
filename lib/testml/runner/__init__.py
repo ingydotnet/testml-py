@@ -81,10 +81,10 @@ class Runner(object):
             function = self.Bridge.get_transform_function(transform.name)
             try:
                 topic.value = function(topic, transform.args)
-            except(Exception, e):
-                topic.error(e)
-        if (topic.error):
-            raise(topic.error)
+            except Exception, e:
+                topic.error = e
+        if topic.error:
+            raise topic.error
         return topic
 
     def parse(self):

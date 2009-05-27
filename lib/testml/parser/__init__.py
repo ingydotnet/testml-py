@@ -6,7 +6,7 @@ class ParserException(Exception):
 
 class Parser(object):
 
-    def __init__(self, receiver, start_token=None):
+    def __init__(self, receiver, start_token=None, stream=None):
         self.stream = None
         self.grammar = Grammar().grammar()
         self.start_token = start_token
@@ -146,6 +146,7 @@ class Parser(object):
 
     def throw_error(self, message):
         line = 42
+        raise ParserException('msg: %s\nline: %s\n' % (message, line))
         raise ParserException('%s:%s' % (line, message))
 
 

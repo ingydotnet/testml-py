@@ -1,12 +1,20 @@
 import re
 
-def testml_Point(self, name):
+def testml_Point(self, args):
+    name = args[0]
     self.point = name
     value = self.block.points[name]
     value = re.sub(r'\n+\Z', '\n', value, 1)
     if value == '\n':
         value = ''
     return value
+
+def testml_Catch(self, args):
+    if not self.error:
+        raise Exception, "Catch called but no TestML error found"
+    error = self.error
+    self.error = None
+    return error
 
 def testml_List(self, args):
     return self.value.rstrip('\n').split('\n')
