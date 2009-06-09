@@ -1,6 +1,6 @@
 BASE=../lib/testml/parser
 
-$(BASE)/grammar.py: grammar.yaml grammar.py Makefile $(BASE)
+$(BASE)/grammar.py: grammar/grammar.yaml grammar.py Makefile $(BASE)
 	python grammar.py $< > $@
 
 $(BASE):
