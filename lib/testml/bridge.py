@@ -1,13 +1,8 @@
-
-TRANSFORM_CLASSES = [
-            'testml.standard'
-        ]
-
 class Bridge(object):
 
     def get_transform_function(self, name):
         function = None
-        function_name = 'testml_%s' % name
+        function_name = name
         for klass in TRANSFORM_CLASSES:
             try:
                 module = __import__(klass, {}, {}, [function_name])
@@ -18,3 +13,7 @@ class Bridge(object):
         if not function:
             raise ImportError('unable to import function: %s' % function_name)
         return function
+
+TRANSFORM_CLASSES = [
+    'testml.standard'
+]

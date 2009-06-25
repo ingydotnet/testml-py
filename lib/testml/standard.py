@@ -1,6 +1,6 @@
 import re
 
-def testml_Point(self, args):
+def Point(self, args):
     name = args[0]
     self.point = name
     value = self.block.points[name]
@@ -9,31 +9,31 @@ def testml_Point(self, args):
         value = ''
     return value
 
-def testml_Catch(self, args):
+def Catch(self, args):
     if not self.error:
         raise Exception, "Catch called but no TestML error found"
     error = self.error
     self.error = None
     return error
 
-def testml_List(self, args):
+def List(self, args):
     return self.value.rstrip('\n').split('\n')
 
-def testml_Join(self, args):
+def Join(self, args):
     join_string = args[0]
     if not join_string:
         join_string = ''
     return join_string.join(self.value)
 
-def testml_Reverse(self, args):
+def Reverse(self, args):
     self.value.reverse()
     return self.value
 
-def testml_Item(self, args):
+def Item(self, args):
     list = self.value
     list.append('')
     return '\n'.join(list)
 
-def testml_Sort(self, args):
+def Sort(self, args):
     self.value.sort()
     return self.value
