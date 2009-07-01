@@ -60,7 +60,7 @@ class Builder(object):
         self.document = Document()
 
         self.current_statement = None
-        self.insert_expression_here = []
+        self.insert_expression_here = None
         self.current_expression = []
         self.inline_data = None
 
@@ -88,7 +88,7 @@ class Builder(object):
 
     def try_test_statement(self, arguments):
         self.current_statement = Statement()
-        self.insert_expression_here.append(self.current_statement.primary_expression)
+        self.insert_expression_here = self.current_statement.primary_expression
 
     def got_test_statement(self, arguments):
         statement = self.current_statement
@@ -103,7 +103,7 @@ class Builder(object):
         self.current_expression.append(Expression())
 
     def got_test_expression(self, arguments):
-        self.insert_expression_here[-1].append(self.current_expression.pop())
+        self.insert_expression_here.append(self.current_expression.pop())
 
     def not_test_expression(self, arguments):
         self.current_expression.pop()
@@ -129,7 +129,7 @@ class Builder(object):
         self.current_expression[-1].transforms.append(Transform(name=name, args=self.arguments))
 
     def got_assertion_operator(self, arguments):
-        self.insert_expression_here.append(self.current_statement.assertion_expression)
+        self.insert_expression_here = self.current_statement.assertion_expression
 
     def got_data_section(self, arguments):
         self.inline_data = arguments[0]
