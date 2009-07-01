@@ -33,14 +33,16 @@ class Runner(object):
         self.title()
         self.plan_begin()
 
+        count = 0
         for statement in self.doc.tests.statements:
             blocks = self.select_blocks(statement.points)
 
             for block in blocks:
+                count += 1
                 left = self.evaluate_expression(statement.primary_expression[0], block)
                 if statement.assertion_expression:
                     right = self.evaluate_expression(statement.assertion_expression[0], block)
-                    yield self.do_test('EQ', left, right, block.label)
+                    yield '%s:%s:%s' % (self.doc.meta.data['Title'], block.label, count), self.do_test('EQ', left, right, block.label)
 
         self.plan_end()
 
