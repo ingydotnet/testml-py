@@ -13,7 +13,6 @@ class Parser(object):
         self.position = 0
         self.receiver = receiver
         self.arguments = []
-        self.stack = []
 
     def parse(self):
         self.match(self.start_token)
@@ -30,7 +29,6 @@ class Parser(object):
         state = None
         if isinstance(topic, basestring) and re.match(r'\w+$', topic):
             state = topic
-            self.stack.append(state)
             topic = self.grammar[topic]
             self.callback('try', state)
 
@@ -72,7 +70,6 @@ class Parser(object):
 
         if state:
             self.callback(status, state)
-            self.stack.pop()
 
         if not result:
             self.position = position

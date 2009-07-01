@@ -1,15 +1,3 @@
-diff --git a/.gitmodules b/.gitmodules
-index fac8cca..6da947e 100644
---- a/.gitmodules
-+++ b/.gitmodules
-@@ -1,6 +1,6 @@
- [submodule "tests/testml"]
- 	path = tests/testml
--	url = git://github.com/ingydotnet/testml-tml.git
-+	url = git@github.com:ingydotnet/testml-tml.git
- [submodule "src/grammar"]
- 	path = src/grammar
- 	url = git://github.com/ingydotnet/testml-grammar.git
 diff --git a/lib/testml/document.py b/lib/testml/document.py
 index 4203550..7911d4f 100644
 --- a/lib/testml/document.py
@@ -25,18 +13,6 @@ index 4203550..7911d4f 100644
          }
  
  
-@@ -26,9 +26,9 @@ class Tests(object):
- class Statement(object):
-     def __init__(self):
-         self.points = []
--        self.primary_expression = []
-+        self.left_expression = []
-         self.assertion_operator = None
--        self.assertion_expression = []
-+        self.right_expression = []
- 
- class Expression(object):
-     def __init__(self):
 @@ -58,9 +58,10 @@ class Builder(object):
  
      def __init__(self):
