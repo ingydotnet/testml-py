@@ -1,15 +1,3 @@
-diff --git a/ToDo b/ToDo
-index 09a32f2..02391a7 100644
---- a/ToDo
-+++ b/ToDo
-@@ -10,6 +10,7 @@
- + Build Tests object from parse events
- + Parse Data Section
- + Write the evaluation runtime
-++ Change 'Topic' to 'Context'
- 
- - Support Marker meta directives
- - Perl code review
 --- a/lib/TestML/Bridge.pm
 +++ b/lib/TestML/Bridge.pm
 @@ -4,7 +4,7 @@ use warnings;
@@ -137,45 +125,6 @@ index 1027508..7902561 100644
      $self->current_block->points->{$self->point_name} = shift;
  }
  
-diff --git a/lib/TestML/Parser.pm b/lib/TestML/Parser.pm
-index 96943ce..ba7e219 100644
---- a/lib/TestML/Parser.pm
-+++ b/lib/TestML/Parser.pm
-@@ -11,7 +11,6 @@ field 'start_token';
- field 'position' => 0;
- field 'receiver';
- field 'arguments' => [];
--field 'stack' => [];
- 
- sub parse {
-     my $self = shift;
-@@ -31,8 +30,6 @@ sub match {
-     if (not ref($topic) and $topic =~ /^\w+$/) {
-         $state = $topic;
- 
--        push @{$self->stack}, $state;
--
-         if (not defined $self->grammar->{$topic}) {
-             die "\n\n*** No grammar support for '$topic'\n\n";
-             return 0;
-@@ -79,7 +76,6 @@ sub match {
- 
-     if ($state) {
-         $self->callback($status, $state);
--        pop @{$self->stack};
-     }
- 
-     $self->position($position) unless $result;
-@@ -139,9 +135,6 @@ sub callback {
-     my $state = shift;
-     my $method = $type . '_' . $state;
- 
--#     $warn = 1 if $state eq 'data_section';
--#     warn ">> $method\n" if $warn;
--
-     if ($self->receiver->can($method)) {
-         $self->receiver->$method(@{$self->arguments});
-     }
 diff --git a/lib/TestML/Runner.pm b/lib/TestML/Runner.pm
 index c7805d3..99d0d8e 100644
 --- a/lib/TestML/Runner.pm
@@ -222,8 +171,7 @@ index c7805d3..99d0d8e 100644
 -    my $block = shift;
 +    my $block = shift || undef;
  
--    my $topic = TestML::Topic->new(
-+    my $context = TestML::Context->new(
+     my $context = TestML::Context->new(
          document => $self->doc,
          block => $block,
          value => undef,
@@ -231,12 +179,10 @@ index c7805d3..99d0d8e 100644
  
      for my $transform (@{$expression->transforms}) {
          my $transform_name = $transform->name;
--        next if $topic->error and $transform_name ne 'Catch';
--        my $function = $self->Bridge->get_transform_function($transform_name);
-+        next if $context->error and $transform_name ne 'Catch';
-+        my $function = $self->Bridge->__get_transform_function($transform_name);
+         next if $context->error and $transform_name ne 'Catch';
+         my $function = $self->Bridge->__get_transform_function($transform_name);
          my $value = eval {
--            &$function($topic, @{$transform->args});
+-            &$function($context, @{$transform->args});
 +            &$function(
 +                $context,
 +                map {
@@ -247,21 +193,16 @@ index c7805d3..99d0d8e 100644
 +            );
          };
          if ($@) {
--            $topic->error($@);
-+            $context->error($@);
+             $context->error($@);
          }
          else {
--            $topic->value($value);
-+            $context->value($value);
+             $context->value($value);
          }
      }
--    if ($topic->error) {
--        die $topic->error;
-+    if ($context->error) {
-+        die $context->error;
+     if ($context->error) {
+         die $context->error;
      }
--    return $topic;
-+    return $context;
+     return $context;
  }
  
  sub parse {
@@ -292,15 +233,6 @@ index c7805d3..99d0d8e 100644
              start_token => 'data',
          );
  
-@@ -137,7 +154,7 @@ sub parse_data {
-     }
- }
- 
--package TestML::Topic;
-+package TestML::Context;
- use TestML::Base -base;
- 
- field 'document';
 diff --git a/lib/TestML/Runner/TAP.pm b/lib/TestML/Runner/TAP.pm
 index 67f50a2..611e782 100644
 --- a/lib/TestML/Runner/TAP.pm

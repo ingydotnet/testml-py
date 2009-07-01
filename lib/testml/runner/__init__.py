@@ -7,7 +7,7 @@ import os
 class RunnerException(Exception):
     pass
 
-class Topic(object):
+class Context(object):
     def __init__(self, document=None, block=None, value=None):
         self.document = document
         self.block = block
@@ -74,19 +74,19 @@ class Runner(object):
         pass
 
     def evaluate_expression(self, expression, block):
-        topic = Topic(document=self.doc, block=block, value=None)
+        context = Context(document=self.doc, block=block, value=None)
         
         for transform in expression.transforms:
-            if (topic.error and transform.name != 'Catch'):
+            if (context.error and transform.name != 'Catch'):
                 continue
             function = self.Bridge._get_transform_function(transform.name)
             try:
-                topic.value = function(topic, transform.args)
+                context.value = function(context, transform.args)
             except Exception, e:
-                topic.error = e
-        if topic.error:
-            raise topic.error
-        return topic
+                context.error = e
+        if context.error:
+            raise context.error
+        return context
 
     def parse(self):
         """parse the document"""
