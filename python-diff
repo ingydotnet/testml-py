@@ -1,0 +1,133 @@
+diff --git a/.gitmodules b/.gitmodules
+index fac8cca..6da947e 100644
+--- a/.gitmodules
++++ b/.gitmodules
+@@ -1,6 +1,6 @@
+ [submodule "tests/testml"]
+ 	path = tests/testml
+-	url = git://github.com/ingydotnet/testml-tml.git
++	url = git@github.com:ingydotnet/testml-tml.git
+ [submodule "src/grammar"]
+ 	path = src/grammar
+ 	url = git://github.com/ingydotnet/testml-grammar.git
+diff --git a/lib/testml/document.py b/lib/testml/document.py
+index 4203550..7911d4f 100644
+--- a/lib/testml/document.py
++++ b/lib/testml/document.py
+@@ -13,8 +13,8 @@ class Meta(object):
+             'Data': [],
+             'Title': '',
+             'Plan': 0,
+-            'TestMLBlockMarker': '===',
+-            'TestMLPointMarker': '---',
++            'BlockMarker': '===',
++            'PointMarker': '---',
+         }
+ 
+ 
+@@ -26,9 +26,9 @@ class Tests(object):
+ class Statement(object):
+     def __init__(self):
+         self.points = []
+-        self.primary_expression = []
++        self.left_expression = []
+         self.assertion_operator = None
+-        self.assertion_expression = []
++        self.right_expression = []
+ 
+ class Expression(object):
+     def __init__(self):
+@@ -58,9 +58,10 @@ class Builder(object):
+ 
+     def __init__(self):
+         self.document = Document()
++        self.grammar = None
+ 
+@@ -85,10 +86,15 @@ class Builder(object):
+             self.document.meta.data[key].append(value)
+         except AttributeError:
+             self.document.meta.data[key] = value
++# +    if ($key =~ /^(Block|Point)Marker$/) {
++# +        $key =~ s/([a-z])?([A-Z])/$1 ? ($1 . '_' . lc($2)) : lc($2)/ge;
++# +        $value =~ s/([\$\%\^\*\+\?\|])/\\$1/g;
++# +        $self->grammar->{$key} = '/' . $value . '/';
++# +    }
+ 
+     def got_test_statement(self, arguments):
+         statement = self.current_statement
+@@ -96,6 +102,29 @@ class Builder(object):
+         self.document.tests.statements.append(statement)
+         self.current_statement = None
+ 
++    def try_argument(self):
++        pass
++# +sub try_argument {
++# +    my $self = shift;
++# +    push @{$self->current_expression},
++# +        TestML::Expression->new();
++# +}
++
++    def got_argument(self):
++        pass
++# +sub got_argument {
++# +    my $self = shift;
++# +    push @{$self->arguments},
++# +        pop @{$self->current_expression};
++# +}
++
++    def not_argument(self):
++        pass
++# +sub not_argument {
++# +    my $self = shift;
++# +    pop @{$self->current_expression};
++# +}
++
+     def not_test_statement(self, arguments):
+         self.current_statement = None
+ 
+@@ -103,13 +132,14 @@ class Builder(object):
+         self.current_expression.append(Expression())
+ 
+     def not_test_expression(self, arguments):
+         self.current_expression.pop()
+ 
+     def got_data_point(self, arguments):
+         name = arguments[0]
++# +    $name =~ s/^\$// or die;
+         self.current_statement.points.append(name)
+         self.current_expression[-1].transforms.append(
+             Transform(name='Point', args=[name])
+@@ -129,7 +159,7 @@ class Builder(object):
+         self.current_expression[-1].transforms.append(Transform(name=name, args=self.arguments))
+ 
+     def got_data_section(self, arguments):
+         self.inline_data = arguments[0]
+diff --git a/lib/testml/runner/__init__.py b/lib/testml/runner/__init__.py
+index 3769eaa..6142840 100644
+--- a/lib/testml/runner/__init__.py
++++ b/lib/testml/runner/__init__.py
+@@ -33,16 +33,14 @@ class Runner(object):
+         self.title()
+         self.plan_begin()
+ 
+-        count = 0
+         for statement in self.doc.tests.statements:
+             blocks = self.select_blocks(statement.points)
+ 
+             for block in blocks:
+-                count += 1
+                 left = self.evaluate_expression(statement.primary_expression[0], block)
+                 if statement.assertion_expression:
+                     right = self.evaluate_expression(statement.assertion_expression[0], block)
+-                    yield '%s:%s:%s' % (self.doc.meta.data['Title'], block.label, count), self.do_test('EQ', left, right, block.label)
++                    yield self.do_test('EQ', left, right, block.label)
+ 
+         self.plan_end()
+ 
+diff --git a/tests/testml b/tests/testml
+index 97d9c89..197a39c 160000
+--- a/tests/testml
++++ b/tests/testml
+@@ -1 +1 @@
+-Subproject commit 97d9c89236eb730f9ebe33afb20fa6e555f7ddb5
++Subproject commit 197a39cb2e19f1e356ca2d8a543bc153383506ff
