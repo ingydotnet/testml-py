@@ -3,4 +3,4 @@
 	url = git@github.com:ingydotnet/testml-tml.git
 [submodule "src/grammar"]
 	path = src/grammar
-	url = git@github.com:ingydotnet/testml-grammar.git
+	url = git://github.com/ingydotnet/testml-grammar.git

@@ -16,9 +16,9 @@ class Topic(object):
         self.error = None
 
 class Runner(object):
-
     def __init__(self, document=None, bridge=None):
         self.document = document
+        # self.base = document.replace(...)
         self.bridge = bridge
         self.doc = self.parse()
         self.Bridge = self.init_bridge()
@@ -29,7 +29,6 @@ class Runner(object):
 
 
     def run(self):
-        # TODO establish self.base the location of the data files
         self.setup()
         self.title()
         self.plan_begin()
