@@ -1,6 +1,6 @@
 class Bridge(object):
 
-    def get_transform_function(self, name):
+    def _get_transform_function(self, name):
         function = None
         function_name = name
         for klass in TRANSFORM_CLASSES:

@@ -39,9 +39,9 @@ class Runner(object):
 
             for block in blocks:
                 count += 1
-                left = self.evaluate_expression(statement.primary_expression[0], block)
-                if statement.assertion_expression:
-                    right = self.evaluate_expression(statement.assertion_expression[0], block)
+                left = self.evaluate_expression(statement.left_expression[0], block)
+                if statement.right_expression:
+                    right = self.evaluate_expression(statement.right_expression[0], block)
                     yield '%s:%s:%s' % (self.doc.meta.data['Title'], block.label, count), self.do_test('EQ', left, right, block.label)
 
         self.plan_end()
@@ -79,7 +79,7 @@ class Runner(object):
         for transform in expression.transforms:
             if (topic.error and transform.name != 'Catch'):
                 continue
-            function = self.Bridge.get_transform_function(transform.name)
+            function = self.Bridge._get_transform_function(transform.name)
             try:
                 topic.value = function(topic, transform.args)
             except Exception, e:

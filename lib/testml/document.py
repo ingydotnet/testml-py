@@ -26,9 +26,9 @@ class Tests(object):
 class Statement(object):
     def __init__(self):
         self.points = []
-        self.primary_expression = []
+        self.left_expression = []
         self.assertion_operator = None
-        self.assertion_expression = []
+        self.right_expression = []
 
 class Expression(object):
     def __init__(self):
@@ -88,7 +88,7 @@ class Builder(object):
 
     def try_test_statement(self, arguments):
         self.current_statement = Statement()
-        self.insert_expression_here = self.current_statement.primary_expression
+        self.insert_expression_here = self.current_statement.left_expression
 
     def got_test_statement(self, arguments):
         statement = self.current_statement
@@ -129,7 +129,7 @@ class Builder(object):
         self.current_expression[-1].transforms.append(Transform(name=name, args=self.arguments))
 
     def got_assertion_operator(self, arguments):
-        self.insert_expression_here = self.current_statement.assertion_expression
+        self.insert_expression_here = self.current_statement.right_expression
 
     def got_data_section(self, arguments):
         self.inline_data = arguments[0]
