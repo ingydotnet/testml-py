@@ -16,6 +16,13 @@ def Catch(self, args):
     self.error = None
     return error
 
+def Throw(self, args):
+    try:
+        msg = args[0]
+    except Exception:
+        self.value
+    return msg
+
 def String(self, args=[]):
     if self.value:
         return self.value
@@ -48,3 +55,8 @@ def Item(self, args):
 def Sort(self, args):
     self.value.sort()
     return self.value
+
+def Chomp(self, args):
+    string = self.value
+    return re.sub(r'\n$', '', string)
+

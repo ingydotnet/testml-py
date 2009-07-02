@@ -34,17 +34,6 @@ index 1027508..7902561 100644
  }
  sub got_transform_name {
      my $self = shift;
-@@ -201,12 +230,12 @@ sub got_transform_call {
-             name => $name,
-             args => $self->arguments,
-         );
-+    delete $self->{arguments};
- }
- 
-@@ -246,4 +275,4 @@ sub got_point_phrase {
-     $self->current_block->points->{$self->point_name} = shift;
- }
- 
 diff --git a/lib/TestML/Runner.pm b/lib/TestML/Runner.pm
 index c7805d3..99d0d8e 100644
 --- a/lib/TestML/Runner.pm
@@ -184,27 +173,6 @@ diff --git a/lib/TestML/Standard.pm b/lib/TestML/Standard.pm
 index aa55f2f..bb4ab2d 100644
 --- a/lib/TestML/Standard.pm
 +++ b/lib/TestML/Standard.pm
-@@ -34,18 +34,18 @@ sub Catch {
-     return $error;
- }
- 
- sub Throw {
-     my $self = shift;
--    my $msg = shift || $self->value
-+    my $msg = @_ ? (shift)->value : $self->value
-       or die "Throw called without an error msg";
-     die $msg;
- }
- 
- sub String {
-     my $self = shift;
-     my $string =
-     (defined $self->value) ? $self->value :
--    @_ ? (shift) :
-+    @_ ? ref($_[0]) ? (shift)->value : (shift) :
-     $self->raise(
-         'StandardLibraryException',
-         'Str transform called but no string available'
 @@ -53,46 +53,51 @@
  
  sub Join {
@@ -214,22 +182,6 @@ index aa55f2f..bb4ab2d 100644
      return join $string, @$list;
  }
  
-+sub Chomp {
-+    my $string = (shift)->value;
-+    chomp($string);
-+    return $string;
-+}
-diff --git a/t/Bridge.pm b/t/Bridge.pm
-new file mode 100644
-index 0000000..42ac74a
---- /dev/null
-+++ b/t/Bridge.pm
-@@ -0,0 +1,35 @@
-+sub combine {
-+    my $self = shift;
-+    my $suffix = shift;
-+    $self->value . ' ' . $suffix->value;
-+}
 diff --git a/t/arguments.t b/t/arguments.t
 new file mode 100644
 index 0000000..ef18987
