@@ -58,6 +58,7 @@ class Builder(object):
 
     def __init__(self):
         self.document = Document()
+        self.grammar = None
 
         self.current_statement = None
         self.insert_expression_here = None
