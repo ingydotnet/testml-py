@@ -24,12 +24,12 @@ class Runner(object):
         self.Bridge = self.init_bridge()
 
     def init_bridge(self):
-        """Initialize the Bridge Class. Will throw if it can't import."""
+        # XXX The subclass method should be getting called.
         return self.bridge()
+        raise RunnerException("'init_bridge' must me implemented in the subclass")
 
 
     def run(self):
-        self.setup()
         self.title()
         self.plan_begin()
 
@@ -108,9 +108,6 @@ class Runner(object):
             document.data.blocks.extend(parser.receiver.blocks)
 
     def title(self):
-        raise RunnerException("Don't use %s directly. Use a subclass" % self.__class__)
-
-    def setup(self):
         raise RunnerException("Don't use %s directly. Use a subclass" % self.__class__)
 
     def do_test(self, operator, left, right, lable=None):

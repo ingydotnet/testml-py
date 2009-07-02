@@ -38,22 +38,12 @@ diff --git a/lib/TestML/Runner.pm b/lib/TestML/Runner.pm
 index c7805d3..99d0d8e 100644
 --- a/lib/TestML/Runner.pm
 +++ b/lib/TestML/Runner.pm
-@@ -17,30 +17,37 @@ sub setup {
- }
- 
- sub init_bridge {
--    my $self = shift;
--    my $class = $self->bridge or die "No Bridge class specified";
--    eval "require $class; 1" or die $@;
--    return $class->new();
-+    die "'init_bridge' must be implemented in subclass";
- }
+@@ -17,30 +17,37 @@
  
  sub run {
      my $self = shift;
  
      $self->base(($0 =~ /(.*)\//) ? $1 : '.');
--    $self->setup();
      $self->title();
      $self->plan_begin();
  
@@ -142,33 +132,6 @@ index c7805d3..99d0d8e 100644
              start_token => 'data',
          );
  
-diff --git a/lib/TestML/Runner/TAP.pm b/lib/TestML/Runner/TAP.pm
-index 67f50a2..611e782 100644
---- a/lib/TestML/Runner/TAP.pm
-+++ b/lib/TestML/Runner/TAP.pm
-@@ -8,14 +8,17 @@ use Test::Builder;
- 
- field 'test_builder' => -init => 'Test::Builder->new';
- 
--sub setup {
-+sub init_bridge {
-     my $self = shift;
--    {
--        local @INC = ('t', 't/lib', @INC);
--        my $class = $self->bridge;
-+
-+    local @INC = ('t', 't/lib', @INC);
-+    my $class = $self->bridge;
-+    if ($class ne 'main') {
-         eval "require $class";
--        die $@ if $@;
-+        die "Error loading bridge class '$class': $@" if $@;
-     }
-+
-+    return $class->new();
- }
- 
- sub title {
 diff --git a/lib/TestML/Standard.pm b/lib/TestML/Standard.pm
 index aa55f2f..bb4ab2d 100644
 --- a/lib/TestML/Standard.pm

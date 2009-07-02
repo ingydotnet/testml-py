@@ -6,8 +6,8 @@ class Runner(SuperRunner):
     as the test harness.
     """
 
-    def setup(self):
-        pass
+    def init_bridge(self):
+        return self.bridge()
 
     def title(self):
         if self.doc.meta.data['Title']:

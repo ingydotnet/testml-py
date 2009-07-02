@@ -8,5 +8,5 @@ from bridge import Bridge
 
 def test_subclass_only():
     runner = Runner('tests/testml/basic.tml', Bridge)
-    py.test.raises(RunnerException, 'runner.setup()')
+    py.test.raises(RunnerException, 'runner.title()')
 
