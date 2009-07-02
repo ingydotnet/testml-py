@@ -114,7 +114,7 @@ class Parser(object):
 
         def replacer(match):
             matched = match.group(1)
-            replacement= self.grammar[matched]
+            replacement = self.grammar[matched]
             return replacement.lstrip('/').rstrip('/')
 
         match = re.search(r'\$(\w+)', pattern)
