@@ -16,6 +16,17 @@ def Catch(self, args):
     self.error = None
     return error
 
+def String(self, args=[]):
+    if self.value:
+        return self.value
+    if args[0]:
+        try:
+            return args[0].value
+        except Exception:
+            return args[0]
+    else:
+        raise Exception, "String transform called, but no string available"
+
 def List(self, args):
     return self.value.rstrip('\n').split('\n')
 
