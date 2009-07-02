@@ -1,3 +1,4 @@
+import re
 
 class Document(object):
     def __init__(self):
@@ -86,6 +87,16 @@ class Builder(object):
             self.document.meta.data[key].append(value)
         except AttributeError:
             self.document.meta.data[key] = value
+        if (key == 'BlockMarker' or key == 'PointMarker'):
+            def r1(m):
+                if m.group(1):
+                    return m.group(1) + '_' + m.group(2).lower()
+                else:
+                    return m.group(2).lower()
+
+            key = re.sub(r'([a-z])?([A-Z])', r1, key)
+            value = re.sub(r'([\$\%\^\*\+\?\|])', lambda m: '\\' + m.group(1), value)
+            self.grammar[key] = value
 
     def try_test_statement(self, arguments):
         self.current_statement = Statement()
