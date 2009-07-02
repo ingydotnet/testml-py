@@ -111,6 +111,15 @@ class Builder(object):
     def not_test_statement(self, arguments):
         self.current_statement = None
 
+    def try_argument(self, arguments):
+        self.current_expression.append(Expression())
+
+    def got_argument(self, arguments):
+        self.arguments.append(self.current_expression.pop())
+
+    def not_argument(self, arguments):
+        self.current_expression.pop()
+
     def try_test_expression(self, arguments):
         self.current_expression.append(Expression())
 

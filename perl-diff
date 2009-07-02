@@ -2,31 +2,6 @@ diff --git a/lib/TestML/Document.pm b/lib/TestML/Document.pm
 index 1027508..7902561 100644
 --- a/lib/TestML/Document.pm
 +++ b/lib/TestML/Document.pm
-@@ -140,6 +145,21 @@ sub not_test_statement {
-     delete $self->{current_statement};
- }
- 
-+sub try_argument {
-+    my $self = shift;
-+    push @{$self->current_expression},
-+        TestML::Expression->new();
-+}
-+sub got_argument {
-+    my $self = shift;
-+    push @{$self->arguments},
-+        pop @{$self->current_expression};
-+}
-+sub not_argument {
-+    my $self = shift;
-+    pop @{$self->current_expression};
-+}
-+
- sub try_test_expression {
-     my $self = shift;
-     push @{$self->current_expression},
-@@ -147,7 +167,7 @@ sub try_test_expression {
- }
-
 @@ -158,6 +178,7 @@ sub not_test_expression {
  sub got_data_point {
      my $self = shift;
