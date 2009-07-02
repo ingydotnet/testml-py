@@ -1,30 +1,3 @@
---- a/lib/TestML/Bridge.pm
-+++ b/lib/TestML/Bridge.pm
-@@ -4,7 +4,7 @@ use warnings;
- 
- use TestML::Base -base;
- 
--sub transform_classes {
-+sub __transform_classes {
-     my $class = shift;
-     my $list = [qw(
-         TestML::Standard    
-@@ -15,14 +15,14 @@ sub transform_classes {
-     return $list;
- }
- 
-sub __get_transform_function {
-     my $class = shift;
-     my $name = shift;
-    my $classes = $class->__transform_classes();
-     my $function;
-     for my $class (@$classes) {
-         eval "use $class";
--        $function = $class->can("testml_${name}") and last;
-+        $function = $class->can($name) and last;
-     }
-     if (not $function) {
-         die "Can't locate function '$name'";
 diff --git a/lib/TestML/Document.pm b/lib/TestML/Document.pm
 index 1027508..7902561 100644
 --- a/lib/TestML/Document.pm
@@ -264,43 +237,11 @@ diff --git a/lib/TestML/Standard.pm b/lib/TestML/Standard.pm
 index aa55f2f..bb4ab2d 100644
 --- a/lib/TestML/Standard.pm
 +++ b/lib/TestML/Standard.pm
-@@ -3,11 +3,11 @@ use strict;
- use warnings;
- no warnings 'redefine';
- 
--sub testml_Select {
-+sub Select {
-     return (shift)->value;
- }
- 
--sub testml_Point {
-+sub Point {
-     my $self = shift;
-     my $name = shift;
-     $self->point($name);
-@@ -18,14 +18,14 @@ sub testml_Point {
-     return $value;
- }
- 
--sub testml_Raw {
-+sub Raw {
-     my $self = shift;
-     my $point = $self->point
-         or die "Raw called but there is no point";
-     return $self->block->points->{$point};
- }
- 
--sub testml_Catch {
-+sub Catch {
-     my $self = shift;
-     my $error = $self->error
-         or die "Catch called but no TestML error found";
-@@ -34,18 +34,18 @@ sub testml_Catch {
+@@ -34,18 +34,18 @@ sub Catch {
      return $error;
  }
  
--sub testml_Throw {
-+sub Throw {
+ sub Throw {
      my $self = shift;
 -    my $msg = shift || $self->value
 +    my $msg = @_ ? (shift)->value : $self->value
@@ -308,8 +249,7 @@ index aa55f2f..bb4ab2d 100644
      die $msg;
  }
  
--sub testml_Str {
-+sub String {
+ sub String {
      my $self = shift;
      my $string =
      (defined $self->value) ? $self->value :
@@ -318,60 +258,13 @@ index aa55f2f..bb4ab2d 100644
      $self->raise(
          'StandardLibraryException',
          'Str transform called but no string available'
-@@ -53,46 +53,51 @@ sub testml_Str {
-     return $string;
- }
+@@ -53,46 +53,51 @@
  
--sub testml_BoolStr {
-+sub BoolStr {
-     return (shift)->value ? 'True' : 'False';
- }
- 
--sub testml_List {
-+sub List {
-     return [ split /\n/, (shift)->value ];
- }
- 
--sub testml_Join {
-+sub Join {
+ sub Join {
      my $list = (shift)->value;
 -    my $string = @_ ? shift : '';
 +    my $string = @_ ? (shift)->value : '';
      return join $string, @$list;
- }
- 
--sub testml_Reverse {
-+sub Reverse {
-     my $list = (shift)->value;
-     return [ reverse @$list ];
- }
- 
--sub testml_Sort {
-+sub Sort {
-     my $list = (shift)->value;
-     return [ sort @$list ];
- }
- 
--sub testml_Item {
-+sub Item {
-     my $list = (shift)->value;
-     return join("\n", (@$list, ''));
- }
- 
--sub testml_Union {
-+sub Union {
-     my $list = (shift)->value;
-     # my $list2 = shift;
-     my $list2 = [ @$list ];
-     return [ @$list, @$list2 ];
- }
- 
--sub testml_Unique {
-+sub Unique {
-     my $list = (shift)->value;
-     # my $list2 = shift;
-     my $list2 = [ @$list ];
-     return [ @$list, @$list2 ];
  }
  
 +sub Chomp {
@@ -385,76 +278,11 @@ index 0000000..42ac74a
 --- /dev/null
 +++ b/t/Bridge.pm
 @@ -0,0 +1,35 @@
-+package t::Bridge;
-+use strict;
-+use warnings;
-+use base 'TestML::Bridge';
-+
-+sub my_thing {
-+    my $self = shift;
-+    return join ' - ', split "\n", $self->value;
-+}
-+
-+sub parse_testml {
-+    my $self = shift;
-+    my $stream = $self->value;
-+    TestML::Parser->new(
-+        receiver => TestML::Document::Builder->new(),
-+        start_token => 'document',
-+        stream => $stream,
-+    )->parse;
-+}
-+
-+sub msg {
-+    my $self = shift;
-+    my $text = $self->value;
-+    $text =~ /^\s+msg:\s+(.*)/m
-+      or die "Can't find the error message";
-+    return $1;
-+}
-+
 +sub combine {
 +    my $self = shift;
 +    my $suffix = shift;
 +    $self->value . ' ' . $suffix->value;
 +}
-+
-+1;
-diff --git a/t/TestMLTestBridge.pm b/t/TestMLTestBridge.pm
-deleted file mode 100644
-index 7dfca45..0000000
---- a/t/TestMLTestBridge.pm
-+++ /dev/null
-@@ -1,29 +0,0 @@
--package TestMLTestBridge;
--use strict;
--use warnings;
--use base 'TestML::Bridge';
--
--sub testml_my_thing {
--    my $self = shift;
--    return join ' - ', split "\n", $self->value;
--}
--
--sub testml_parse_testml {
--    my $self = shift;
--    my $stream = $self->value;
--    TestML::Parser->new(
--        receiver => TestML::Document::Builder->new(),
--        start_token => 'document',
--        stream => $stream,
--    )->parse;
--}
--
--sub testml_msg {
--    my $self = shift;
--    my $text = $self->value;
--    $text =~ /^\s+msg:\s+(.*)/m
--      or die "Can't find the error message";
--    return $1;
--}
--
--1;
 diff --git a/t/arguments.t b/t/arguments.t
 new file mode 100644
 index 0000000..ef18987
