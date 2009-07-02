@@ -13,8 +13,8 @@ class Meta(object):
             'Data': [],
             'Title': '',
             'Plan': 0,
-            'TestMLBlockMarker': '===',
-            'TestMLPointMarker': '---',
+            'BlockMarker': '===',
+            'PointMarker': '---',
         }
 
 
