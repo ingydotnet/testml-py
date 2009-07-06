@@ -35,8 +35,16 @@ class Runner(object):
 
         count = 0
         for statement in self.doc.tests.statements:
-            blocks = self.select_blocks(statement.points)
+            points = statement.points
+            if not points:
+                left = self.evaluate_expression(statement.left_expression[0])
+                if statement.right_expression:
+                    right = self.evaluate_expression(statement.right_expression[0])
+                    self.do_test('EQ', left, right, None);
+                    yield '%s:%s:%s' % (self.doc.meta.data['Title'], '', count), self.do_test('EQ', left, right, block.label)
+                continue
 
+            blocks = self.select_blocks(points)
             for block in blocks:
                 count += 1
                 left = self.evaluate_expression(statement.left_expression[0], block)
@@ -73,15 +81,22 @@ class Runner(object):
     def plan_end(self):
         pass
 
-    def evaluate_expression(self, expression, block):
+    def evaluate_expression(self, expression, block=None):
         context = Context(document=self.doc, block=block, value=None)
         
+        def m1(item):
+            if type(item).__name__ == 'Expression':
+                return self.evaluate_expression(item, block)
+            else:
+                return item
+
         for transform in expression.transforms:
             if (context.error and transform.name != 'Catch'):
                 continue
             function = self.Bridge._get_transform_function(transform.name)
+            args = map(m1, transform.args)
             try:
-                context.value = function(context, transform.args)
+                context.value = function(context, args)
             except Exception, e:
                 context.error = e
         if context.error:
@@ -91,15 +106,21 @@ class Runner(object):
     def parse(self):
         """parse the document"""
         parser = Parser(receiver=Builder(), start_token='document')
+        parser.receiver.grammar = parser.grammar
         parser.open(self.document)
         parser.parse()
-        self.parse_data(parser.receiver)
+        self.parse_data(parser)
         return parser.receiver.document
 
-    def parse_data(self, builder):
+    def parse_data(self, parser):
+        builder = parser.receiver
         document = builder.document
         for file in document.meta.data['Data']:
-            parser = Parser(receiver=Builder(), start_token='data')
+            parser = Parser(
+                receiver=Builder(),
+                grammar=parser.grammar,
+                start_token='data'
+            )
             if file == '_':
                 parser.stream = builder.inline_data
             else:

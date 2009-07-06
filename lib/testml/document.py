@@ -143,13 +143,15 @@ class Builder(object):
 
     def got_single_quoted_string(self, arguments):
         # TODO apply escapes
-        # XXX no worky yet...
-        self.arguments.append(arguments[0])
-        # self.arguments.append(Transform(name='String', args=arguments))
+        self.current_expression[-1].transforms.append(
+            Transform(name='String', args=arguments)
+        )
 
     def got_double_quoted_string(self, arguments):
         # TODO apply escapes
-        self.arguments.append(Transform(name='String', args=arguments))
+        self.current_expression[-1].transforms.append(
+            Transform(name='String', args=arguments)
+        )
 
     def got_transform_name(self, arguments):
         self.transform_name = arguments[0]

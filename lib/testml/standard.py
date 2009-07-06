@@ -38,7 +38,7 @@ def List(self, args):
     return self.value.rstrip('\n').split('\n')
 
 def Join(self, args):
-    join_string = args[0]
+    join_string = args[0].value
     if not join_string:
         join_string = ''
     return join_string.join(self.value)
