@@ -6,9 +6,8 @@ class ParserException(Exception):
 
 class Parser(object):
 
-    def __init__(self, receiver, grammar=None, start_token=None, stream=None):
+    def __init__(self, receiver, start_token=None, stream=None):
         self.stream = None
-        # TODO - This should not be initialized if already set
         self.grammar = Grammar().grammar()
         self.start_token = start_token
         self.position = 0

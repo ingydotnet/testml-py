@@ -96,7 +96,7 @@ class Builder(object):
 
             key = re.sub(r'([a-z])?([A-Z])', r1, key)
             value = re.sub(r'([\$\%\^\*\+\?\|])', lambda m: '\\' + m.group(1), value)
-            self.grammar[key] = value
+            self.grammar[key] = '/' + value + '/'
 
     def try_test_statement(self, arguments):
         self.current_statement = Statement()

@@ -115,12 +115,13 @@ class Runner(object):
     def parse_data(self, parser):
         builder = parser.receiver
         document = builder.document
+        grammar = parser.grammar
         for file in document.meta.data['Data']:
             parser = Parser(
                 receiver=Builder(),
-                grammar=parser.grammar,
                 start_token='data'
             )
+            parser.grammar = grammar
             if file == '_':
                 parser.stream = builder.inline_data
             else:
