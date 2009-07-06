@@ -4,4 +4,4 @@ from testml.runner.pytest import Runner
 from bridge import Bridge
 
 def test():
-    for test in Runner('tests/testml/basic-old.tml', Bridge).run(): yield test
+    for test in Runner('tests/testml/basic.tml', Bridge).run(): yield test

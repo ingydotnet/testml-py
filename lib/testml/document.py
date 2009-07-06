@@ -131,7 +131,7 @@ class Builder(object):
 
     def got_data_point(self, arguments):
         name = arguments[0]
-        # assert(name[0] == '$')
+        assert(name[0] == '$')
         name = name.lstrip('$')
         self.current_statement.points.append(name)
         self.current_expression[-1].transforms.append(

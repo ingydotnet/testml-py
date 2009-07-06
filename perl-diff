@@ -1,15 +1,3 @@
-diff --git a/lib/TestML/Document.pm b/lib/TestML/Document.pm
-index 1027508..7902561 100644
---- a/lib/TestML/Document.pm
-+++ b/lib/TestML/Document.pm
-@@ -158,6 +178,7 @@ sub not_test_expression {
- sub got_data_point {
-     my $self = shift;
-     my $name = shift;
-+    $name =~ s/^\$// or die;
-     push @{$self->current_statement->points}, $name;
-     push @{$self->current_expression->[-1]->transforms},
-         TestML::Transform->new(
 diff --git a/t/arguments.t b/t/arguments.t
 new file mode 100644
 index 0000000..ef18987
