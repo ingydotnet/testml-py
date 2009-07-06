@@ -37,11 +37,12 @@ class Runner(object):
         for statement in self.doc.tests.statements:
             points = statement.points
             if not points:
+                count += 1
                 left = self.evaluate_expression(statement.left_expression[0])
                 if statement.right_expression:
                     right = self.evaluate_expression(statement.right_expression[0])
                     self.do_test('EQ', left, right, None);
-                    yield '%s:%s:%s' % (self.doc.meta.data['Title'], '', count), self.do_test('EQ', left, right, block.label)
+                    yield '%s:%s:%s' % (self.doc.meta.data['Title'], '', count), self.do_test('EQ', left, right, count)
                 continue
 
             blocks = self.select_blocks(points)
