@@ -7,6 +7,9 @@ from testml.runner import Runner, RunnerException
 from bridge import Bridge
 
 def test_subclass_only():
-    runner = Runner('tests/testml/basic.tml', Bridge)
+    runner = Runner(
+        document='tests/testml/basic.tml',
+        bridge=Bridge,
+    )
     py.test.raises(RunnerException, 'runner.title()')
 
