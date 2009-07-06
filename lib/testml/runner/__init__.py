@@ -16,8 +16,9 @@ class Context(object):
         self.error = None
 
 class Runner(object):
-    def __init__(self, document=None, bridge=None):
+    def __init__(self, document=None, stream=None, bridge=None):
         self.document = document
+        self.stream = stream
         # self.base = document.replace(...)
         self.bridge = bridge
         self.doc = self.parse()
@@ -108,7 +109,12 @@ class Runner(object):
         """parse the document"""
         parser = Parser(receiver=Builder(), start_token='document')
         parser.receiver.grammar = parser.grammar
-        parser.open(self.document)
+        if (self.document):
+            parser.open(self.document)
+        elif (self.stream):
+            parser.stream = self.stream
+        else:
+            raise Exception("Tried to run test without document or stream")
         parser.parse()
         self.parse_data(parser)
         return parser.receiver.document

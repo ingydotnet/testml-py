@@ -29,13 +29,19 @@ class Runner(SuperRunner):
 # even cleaner.
 TESTML = {
     'document': None,
-    'bridge': None
+    'stream': None,
+    'bridge': None,
 }
 def test():
     document = TESTML['document']
+    stream = TESTML['stream']
     bridge = TESTML['bridge']
     if not bridge:
         from bridge import Bridge
         bridge = Bridge
 
-    for test in Runner(document, bridge).run(): yield test
+    for test in Runner(
+        document=document,
+        stream=stream,
+        bridge=bridge
+    ).run(): yield test
