@@ -24,3 +24,18 @@ class Runner(SuperRunner):
                 assert left.value == right.value, label
 
         return test
+
+# XXX Use an importable dict for global settings. Would be nice to do this
+# even cleaner.
+TESTML = {
+    'document': None,
+    'bridge': None
+}
+def test():
+    document = TESTML['document']
+    bridge = TESTML['bridge']
+    if not bridge:
+        from bridge import Bridge
+        bridge = Bridge
+
+    for test in Runner(document, bridge).run(): yield test
