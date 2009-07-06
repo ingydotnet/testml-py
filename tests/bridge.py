@@ -26,7 +26,7 @@ def msg(self, args):
         return value
 
 def combine(self, args):
-    suffix = args[0]
+    suffix = args[0].value
     return self.value + ' ' + suffix
 
 class Bridge(SuperBridge):
