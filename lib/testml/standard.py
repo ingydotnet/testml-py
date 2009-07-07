@@ -17,20 +17,21 @@ def Catch(self, args):
     return error
 
 def Throw(self, args):
-    try:
-        msg = args[0]
-    except Exception:
-        self.value
-    return msg
+    msg = None
+    if len(args):
+        msg = args[0].value
+    elif self.value:
+        msg = self.value
+    raise Exception(msg)
 
 def String(self, args=[]):
-    if self.value:
-        return self.value
-    if args[0]:
+    if len(args):
         try:
             return args[0].value
         except Exception:
             return args[0]
+    elif self.value:
+        return self.value
     else:
         raise Exception, "String transform called, but no string available"
 

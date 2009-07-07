@@ -67,7 +67,7 @@ class Runner(object):
                 break
             try:
                 for point in requested_points:
-                    if not block.points[point]:
+                    if not block.points.has_key(point):
                         raise StopIteration
             except StopIteration:
                 continue
@@ -101,7 +101,7 @@ class Runner(object):
             try:
                 context.value = function(context, args)
             except Exception, e:
-                context.error = e
+                context.error = str(e)
         if context.error:
             raise context.error
         return context
