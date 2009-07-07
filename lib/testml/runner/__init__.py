@@ -16,11 +16,12 @@ class Context(object):
         self.error = None
 
 class Runner(object):
-    def __init__(self, document=None, stream=None, bridge=None):
+    def __init__(self, document=None, stream=None, bridge=None, base=None):
         self.document = document
         self.stream = stream
-        # self.base = document.replace(...)
         self.bridge = bridge
+        self.base = base
+
         self.doc = self.parse()
         self.Bridge = self.init_bridge()
 

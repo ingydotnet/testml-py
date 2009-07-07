@@ -31,8 +31,12 @@ TESTML = {
     'document': None,
     'stream': None,
     'bridge': None,
+    'base': None,
 }
 def test():
+    base = TESTML['base']
+    if base and base.find('/') >= 0:
+        base = base[0:base.rfind('/')]
     document = TESTML['document']
     stream = TESTML['stream']
     bridge = TESTML['bridge']
@@ -43,5 +47,6 @@ def test():
     for test in Runner(
         document=document,
         stream=stream,
-        bridge=bridge
+        bridge=bridge,
+        base=base,
     ).run(): yield test
