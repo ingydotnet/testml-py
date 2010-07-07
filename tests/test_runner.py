@@ -8,7 +8,7 @@ from bridge import Bridge
 
 def test_subclass_only():
     runner = Runner(
-        document='tests/testml/basic.tml',
+        document='tests/testml-tml/basic.tml',
         bridge=Bridge,
     )
     py.test.raises(RunnerException, 'runner.title()')
