@@ -1,10 +1,8 @@
-BASE=../lib/testml/parser
+SRC=../../testml-pgx
+BASE=../testml
 
-$(BASE)/grammar.py: grammar.yaml grammar.py Makefile $(BASE)
-	python grammar.py $< > $@
+$(BASE)/grammar.py: testml.pgx.yaml grammar.py Makefile $(BASE)
+	perl grammar.py $< > $@
 
-$(BASE):
-	mkdir -p $@
-
-clean:
-	rm -fr $(BASE)/grammar.py
+testml.pgx.yaml: $(SRC)/testml.pgx.yaml
+	cp $< $@
