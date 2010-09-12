@@ -1,0 +1,19 @@
+include: ../package-py/ingy-info.yaml
+name: testml
+
+## See: http://pypi.python.org/pypi?:action=list_classifiers
+classifiers:
+- 'Development Status :: 2 - Pre-Alpha'
+- 'Environment :: Console'
+- 'Intended Audience :: Developers'
+- 'License :: OSI Approved :: BSD License'
+- 'Programming Language :: Python'
+- 'Topic :: Software Development'
+- 'Topic :: System :: Software Distribution'
+
+url: http://www.testml.org/
+
+install_requires:
+- pyyaml
+
+scripts: []
