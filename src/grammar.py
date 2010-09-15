@@ -21,8 +21,8 @@ Generated TestML Grammar
 import pegex.grammar
 
 class Grammar(pegex.grammar.Grammar):
-    def __init__(self, receiver=None):
-        pegex.grammar.Grammar.__init__(self, receiver=receiver)
+    def __init__(self, receiver=None, debug=False):
+        pegex.grammar.Grammar.__init__(self, receiver=receiver, debug=debug)
         self.grammar = {}
         self.grammar.update(
 %(data)s
