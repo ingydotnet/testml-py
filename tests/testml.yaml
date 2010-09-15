@@ -1,8 +1,6 @@
-prepend: "import sys; sys.path.insert(0, '.')\n"
 testml: ../../testml-tml
 local: testml
-lang: py
-bridge: bridge
+filename: test-$name.py
+template: template.py
 include:
 - basic
-skip: []
