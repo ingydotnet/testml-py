@@ -12,7 +12,7 @@ from package.unittest import *
 
 class Test():
     def __init__(self):
-        self.run = 'unittest'
+        self.runner = 'testml.runtime.unittest'
         self.ran = False
         self.document = None
         self.stream = None
@@ -35,4 +35,6 @@ def test():
         pass
 
     TestML.base = base
-    XXX(TestML)
+
+    module = __import__(TestML.runner)
+    XXX(module)

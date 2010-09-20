@@ -17,6 +17,6 @@ def get():
   'packages': ['testml', 'testml.parser', 'testml.runner'],
   'scripts': [],
   'url': 'http://www.testml.org/',
-  'version': '0.1'}
+  'version': '0.2.0'}
 )
     return info
