@@ -1,5 +1,5 @@
 import sys
-sys.path.append('./test/lib')
+sys.path.append('./tests/lib')
 
 from testml import TestML
 from testml_bridge import TestMLBridge

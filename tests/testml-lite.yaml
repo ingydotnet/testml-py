@@ -2,7 +2,7 @@ source_testml_dir: ../../testml-tml
 local_testml_dir: ./testml
 test_file_template: |
   import sys
-  sys.path.append('./test/lib')
+  sys.path.append('./tests/lib')
 
   from testml import TestML
   from testml_bridge import TestMLBridge
