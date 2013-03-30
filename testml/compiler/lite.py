@@ -1,5 +1,4 @@
-from testml.compiler import Compiler
+import testml.compiler
 
-class Lite(Compiler):
+class Lite(testml.compiler.Compiler):
     pass
-

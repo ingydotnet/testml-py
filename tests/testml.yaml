@@ -1,16 +1,5 @@
 source_testml_dir: ../../testml-tml
 local_testml_dir: ./testml
-test_file_template: |
-  import sys
-  sys.path.append('./tests/lib')
-
-  from testml import TestML
-  from testml_bridge import TestMLBridge
-
-  TestML(
-      testml = '%(file)s',
-      bridge = TestMLBridge,
-  )
 exclude_testml_files:
 - comments.tml
 - data.tml

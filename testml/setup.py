@@ -4,8 +4,6 @@ import glob
 import os.path
 import shutil
 
-from pprint import * # XXX
-
 DEFAULT_TESTML_CONF = './tests/testml.yaml'
 
 class Setup():
@@ -59,6 +57,8 @@ class Setup():
                 shutil.copyfile(s, t)
             if template:
                 test = re.sub(r'.tml$', '.py', filename)
+                if conf.get('test_file_prefix'):
+                    test = conf('test_file_prefix') + test
                 test = tests+'/'+test
                 hash = {
                     'file': 'testml/'+filename, # XXX another shortcut
