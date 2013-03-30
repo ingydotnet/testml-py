@@ -1,6 +1,6 @@
 import sys
 sys.path.insert(0, '.')
-sys.path.insert(0, './tests')
+sys.path.insert(0, './test')
 
 import unittest
 import testml
@@ -20,9 +20,9 @@ class TestMLTestCase(unittest.TestCase):
             compiler = compiler,
         ).run(self)
 
-files = glob.glob('tests/testml/*.tml')
+files = glob.glob('test/testml/*.tml')
 files.sort()
-files = map(lambda f: f.replace('tests/', ''), files)
+files = map(lambda f: f.replace('test/', ''), files)
 files = filter(lambda f: not(re.search(r'external[12]', f)), files)
 for file_ in files:
     method_name = 'test_' + re.sub(r'\W', '_', file_)
@@ -32,10 +32,10 @@ for file_ in files:
     setattr(TestMLTestCase, method_name, method)
 
 files = """
-tests/arguments.tml
-tests/basic.tml
-tests/exceptions.tml
-tests/semicolons.tml
+test/arguments.tml
+test/basic.tml
+test/exceptions.tml
+test/semicolons.tml
 """.strip().split()
 for file_ in files:
     method_name = 'test_lite_' + re.sub(r'\W', '_', file_)

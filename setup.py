@@ -12,7 +12,7 @@ except ImportError, err:
 
 class Test(Command):
     user_options = []
-    test_dir = 'tests'
+    test_dir = 'test'
 
     def initialize_options(self):
         pass

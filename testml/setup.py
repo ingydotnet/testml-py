@@ -4,7 +4,7 @@ import glob
 import os.path
 import shutil
 
-DEFAULT_TESTML_CONF = './tests/testml.yaml'
+DEFAULT_TESTML_CONF = './test/testml.yaml'
 
 class Setup():
     def setup(self, testml_conf = DEFAULT_TESTML_CONF):
